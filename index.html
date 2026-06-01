@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>VEGFA · Evo2 / Carbon / ProtGPT2 — Generation & Structure Experiments</title>
+<style>
+:root{
+ --bg:#0d1117;--bg2:#010409;--card:#161b22;--card2:#21262d;--border:#30363d;
+ --text:#e6edf3;--muted:#7d8590;--accent:#76b900;--accent2:#a3d61f;
+ --blue:#58a6ff;--red:#ff7b72;--purple:#d2a8ff;--gold:#f0b400;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;
+ font-size:15px;line-height:1.65;min-height:100vh}
+header{background:var(--bg2);border-bottom:1px solid var(--border);
+ padding:24px 32px;display:flex;align-items:center;gap:18px}
+header .logo{color:var(--accent);font-weight:700;font-size:18px;letter-spacing:.6px;
+ font-family:'SF Mono',Consolas,monospace}
+header .sep{color:var(--border);font-size:20px}
+header .title{font-size:18px;color:var(--text);font-weight:500}
+header .sub{font-size:14px;color:var(--muted);margin-left:6px}
+.wrap{max-width:1100px;margin:0 auto;padding:32px}
+h1{font-size:28px;margin-bottom:10px;color:var(--accent)}
+h1 small{font-size:14px;color:var(--muted);font-weight:400;margin-left:8px}
+.lede{color:var(--muted);font-size:15px;max-width:780px;margin-bottom:32px}
+.lede code{background:var(--card2);padding:1px 6px;border-radius:4px;color:var(--blue);
+ font-family:'SF Mono',Consolas,monospace;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-bottom:32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+ padding:24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:8px;
+ transition:all .18s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
+.card.c-blue::before{background:var(--blue)}
+.card.c-red::before{background:var(--red)}
+.card.c-purple::before{background:var(--purple)}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card h2{font-size:16px;font-weight:600;margin-top:4px}
+.card .pill{display:inline-block;font-size:10.5px;font-family:'SF Mono',monospace;
+ background:var(--card2);border:1px solid var(--border);color:var(--accent);
+ padding:3px 10px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase;
+ align-self:flex-start;margin-bottom:4px}
+.card.c-blue .pill{color:var(--blue);background:rgba(88,166,255,.08)}
+.card.c-red .pill{color:var(--red);background:rgba(255,123,114,.08)}
+.card.c-purple .pill{color:var(--purple);background:rgba(210,168,255,.08)}
+.card p{color:var(--muted);font-size:13.5px;margin-top:2px}
+.card .stats{display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);
+ font-size:12px;font-family:'SF Mono',monospace;color:var(--muted);flex-wrap:wrap}
+.card .stats b{color:var(--text)}
+.card .cta{margin-top:auto;color:var(--accent);font-size:13px;font-weight:600;padding-top:10px}
+.card:hover .cta{color:var(--accent2)}
+.section{margin:36px 0 22px;color:var(--muted);font-size:12px;letter-spacing:1.2px;
+ text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--border);padding-bottom:8px}
+.notes{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;font-size:14px;line-height:1.7}
+.notes h3{color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.notes ul{padding-left:20px;color:var(--muted)}
+.notes li{margin:6px 0}
+.notes li b{color:var(--text)}
+.notes code{background:var(--card2);padding:1px 6px;border-radius:4px;color:var(--blue);
+ font-family:'SF Mono',Consolas,monospace;font-size:12.5px}
+footer{padding:24px 32px;font-size:12px;color:var(--muted);text-align:center;
+ border-top:1px solid var(--border);background:var(--bg2);margin-top:40px}
+footer code{font-family:'SF Mono',monospace;color:var(--blue)}
+</style></head><body>
+
+<header>
+ <div class="logo">EVO2 · CARBON · PROTGPT2 · ESMFOLD</div>
+ <div class="sep">|</div>
+ <div><div class="title">VEGFA generation & structure experiments</div>
+  <span class="sub">a side-by-side comparison of three foundation models</span></div>
+</header>
+
+<div class="wrap">
+ <h1>VEGFA experiments <small>VEGFA-A / chr6:43,770,209-43,786,487 / GRCh38</small></h1>
+ <p class="lede">
+  Comparing three generative foundation models (<code>Evo2-7B</code>, <code>Carbon-3B/8B</code>, <code>ProtGPT2</code>)
+  on the task of (re)constructing the VEGFA gene region and its protein. Each viewer is a self-contained
+  3D structure browser (3Dmol.js) with the generation conditions, per-model pLDDT, and TM-score / RMSD
+  vs the real VEGFA reference (ESMFold prediction + RCSB 1VPF receptor-binding-domain crystal).
+ </p>
+
+ <div class="section">Structure viewers</div>
+ <div class="grid">
+
+  <a class="card" href="upstream-orf.html">
+   <span class="pill">Experiment 1 · Evo2 upstream</span>
+   <h2>VEGFA 5′ upstream — Evo2 longest ORF → ESMFold</h2>
+   <p>Evo2-7B generated 5 × 12 kbp of VEGFA upstream genomic DNA via reverse-complement prompting.
+      For each temperature, the longest ORF was folded with ESMFold and aligned against the real
+      VEGFA + the 1VPF crystal.</p>
+   <div class="stats"><span><b>7</b> models</span><span><b>5</b> temperatures</span><span><b>175–523</b> aa</span></div>
+   <div class="cta">Open viewer →</div>
+  </a>
+
+  <a class="card" href="cds.html">
+   <span class="pill">Experiment 2 · Evo2 CDS</span>
+   <h2>VEGFA CDS continuation — Evo2 → ESMFold</h2>
+   <p>The first 500 bp of VEGFA CDS (NM_001025366) served as a prompt; Evo2-7B continued for 800 bp,
+      then translated and folded. No premature stops in any temperature.</p>
+   <div class="stats"><span><b>5</b> models</span><span><b>3</b> temperatures</span><span><b>433</b> aa</span></div>
+   <div class="cta">Open viewer →</div>
+  </a>
+
+  <a class="card c-blue" href="carbon-protgpt2.html">
+   <span class="pill">Experiment 3 · Carbon + ProtGPT2</span>
+   <h2>Carbon-8B & ProtGPT2 — three protein-generation strategies</h2>
+   <p>Three groups: A) Carbon-8B 12 kbp upstream → longest ORF. B) Carbon-8B forward CDS continuation
+      (FNS + base sweep). C) ProtGPT2 protein-LM continuing VEGFA AA. All compared to VEGFA + 1VPF crystal.</p>
+   <div class="stats"><span><b>14</b> models</span><span><b>3</b> generators</span><span><b>113–700</b> aa</span></div>
+   <div class="cta">Open viewer →</div>
+  </a>
+
+ </div>
+
+ <div class="section">Notes</div>
+ <div class="notes">
+  <h3>How to read</h3>
+  <ul>
+   <li><b>pLDDT</b> (0–1 scale): ESMFold per-residue confidence. > 0.7 = well-folded, < 0.5 = disordered/low confidence.</li>
+   <li><b>TM-score</b> (0–1): structural similarity to the reference. <b>> 0.5</b> same fold · <b>0.3–0.5</b> partial · <b>< 0.3</b> unrelated.</li>
+   <li><b>Reference ceiling</b>: 1VPF crystal aligned to ESMFold prediction gives TM = <code>0.226</code>. That's the practical ceiling for "is this VEGFA?" — anything below means it isn't.</li>
+   <li>The viewers embed every PDB inline so they work offline once the page is loaded. Bandwidth ~1–3 MB per page.</li>
+  </ul>
+  <h3 style="margin-top:18px">Bottom line</h3>
+  <ul>
+   <li>No model recreated VEGFA. All generated structures have TM-score ≲ 0.31 vs the crystal — i.e. structurally unrelated.</li>
+   <li><code>ProtGPT2 t=0.85</code> reached the highest mean pLDDT (0.48); foundation models are good at <em>plausible</em> proteins, not <em>specific</em> ones.</li>
+   <li>Carbon-3B/8B is ~6× faster than Evo2-7B at this scale but is strand-orientation sensitive — naive reverse-complement sampling collapses to ~98% GC; needs FNS branch or metadata + repetition penalty to stay clean.</li>
+   <li>The real comparison anchor is the experimental <b>RCSB 1VPF</b> crystal of the receptor-binding domain (1.93 Å, 1997).</li>
+  </ul>
+ </div>
+</div>
+
+<footer>
+ Powered by
+ <code>Evo2-7B</code> (Arc Institute) ·
+ <code>Carbon-3B / Carbon-8B</code> (HuggingFaceBio) ·
+ <code>ProtGPT2</code> (Ferruz et al.) ·
+ <code>ESMFold v1</code> (Meta AI) ·
+ viewer <code>3Dmol.js</code> · alignment <code>tmtools</code>
+</footer>
+
+</body></html>
